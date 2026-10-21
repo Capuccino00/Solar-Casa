@@ -1,0 +1,9 @@
+{
+  "name": "Solar Casa — Controle de Energia",
+  "short_name": "Solar Casa",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f2f6f4",
+  "theme_color": "#123b35",
+  "description": "Controle de geração solar, consumo, leituras e faturas."
+}

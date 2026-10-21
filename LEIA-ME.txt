@@ -1,0 +1,34 @@
+SOLAR CASA — VERSÃO COM HISTÓRICO E SINCRONIZAÇÃO GOOGLE SHEETS (BETA)
+
+Conteúdo
+- index.html: app responsivo/PWA.
+- manifest.webmanifest e sw.js: instalação e cache.
+- Histórico antigo da planilha SFV.xlsx preservado na aba “Excel antigo”, para consulta.
+- Sincronização Google Sheets com OAuth, para leituras novas, períodos, faturas e configurações.
+
+IMPORTANTE
+Esta versão é beta. A autenticação e sincronização precisam ser testadas no domínio real do GitHub Pages antes de uso cotidiano. O código usa o Client ID fornecido e a planilha:
+1HWoGDFEe9L9A_2Gyt9nS_FI4xZ4FN5g8kBOfPSq17A8
+
+CONFIGURAÇÃO NECESSÁRIA NO GOOGLE CLOUD
+1. Abra Google Cloud Console e selecione o projeto do Client ID.
+2. Em APIs e serviços > Biblioteca, ative Google Sheets API.
+3. Em APIs e serviços > Credenciais > este ID OAuth, cadastre em “Origens JavaScript autorizadas” a origem HTTPS exata do GitHub Pages, por exemplo https://SEU-USUARIO.github.io (use a origem real, sem caminho).
+4. Confirme que o tipo do cliente OAuth é “Aplicativo da Web”.
+5. Entre no aplicativo e autorize a conta Google que tem acesso de edição à planilha.
+6. Faça backup dos dados antes de testar a primeira sincronização.
+
+COMO PUBLICAR
+1. Extraia a pasta SFV_App.
+2. Envie o conteúdo de SFV_App para a raiz do repositório GitHub Pages já escolhido para o Solar Casa.
+3. Acesse o endereço HTTPS do site e abra Configurações.
+4. Clique “Conectar Google”, autorize o acesso e depois clique “Sincronizar agora”.
+5. A aplicação cria, se necessário, as abas Leituras, Periodos, Faturas e Configuracoes.
+
+ATENÇÃO À SINCRONIZAÇÃO
+- A sincronização combina registros por data (leituras), data de fechamento (períodos) e mês (faturas). Em duplicidades, o dado local prevalece.
+- A escrita substitui o conteúdo das quatro abas operacionais por seus dados sincronizados; não coloque dados manuais importantes nessas abas.
+- O histórico importado do Excel permanece dentro do aplicativo e não é sobrescrito.
+- Não use a versão como fonte oficial até validar uma leitura de teste e confirmar os valores no Google Sheets.
+- Se ocorrer erro 403, confirme que a conta conectada tem acesso de edição à planilha e que a Google Sheets API está ativada.
+- Se ocorrer erro de origem não autorizada, ajuste “Origens JavaScript autorizadas” no OAuth.
