@@ -32,3 +32,9 @@ ATENÇÃO À SINCRONIZAÇÃO
 - Não use a versão como fonte oficial até validar uma leitura de teste e confirmar os valores no Google Sheets.
 - Se ocorrer erro 403, confirme que a conta conectada tem acesso de edição à planilha e que a Google Sheets API está ativada.
 - Se ocorrer erro de origem não autorizada, ajuste “Origens JavaScript autorizadas” no OAuth.
+
+ATUALIZAÇÃO DESTA VERSÃO
+- Histórico: a tabela de leituras agora tem botões Editar e Excluir. A edição solicita os valores em janelas de entrada; a exclusão pede confirmação e recalcula os consumos derivados.
+- Ao excluir uma leitura, sincronize com o Google Sheets para propagar a exclusão também à aba Leituras.
+- A página inicial agora mostra resumo dos períodos antigos importados e resumo anual das faturas do Excel. Os ciclos antigos continuam sem ano/data completa quando a planilha original não permite confirmá-los.
+- O cache do aplicativo foi atualizado para forçar a carga da nova versão.
