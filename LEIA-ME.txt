@@ -1,40 +1,20 @@
-SOLAR CASA — VERSÃO COM HISTÓRICO E SINCRONIZAÇÃO GOOGLE SHEETS (BETA)
+SOLAR CASA — ATUALIZAÇÃO DE HISTÓRICO E ANÁLISES
 
-Conteúdo
-- index.html: app responsivo/PWA.
-- manifest.webmanifest e sw.js: instalação e cache.
-- Histórico antigo da planilha SFV.xlsx preservado na aba “Excel antigo”, para consulta.
-- Sincronização Google Sheets com OAuth, para leituras novas, períodos, faturas e configurações.
+Esta versão deixa a análise histórica mais visível na página inicial e mostra explicitamente os 208 registros diários e as faturas históricas que já estão embutidos no aplicativo. Não é necessário cadastrar as 208 entradas manualmente.
 
-IMPORTANTE
-Esta versão é beta. A autenticação e sincronização precisam ser testadas no domínio real do GitHub Pages antes de uso cotidiano. O código usa o Client ID fornecido e a planilha:
-1HWoGDFEe9L9A_2Gyt9nS_FI4xZ4FN5g8kBOfPSq17A8
+ARQUIVOS
+- index.html
+- sw.js
+- manifest.webmanifest
 
-CONFIGURAÇÃO NECESSÁRIA NO GOOGLE CLOUD
-1. Abra Google Cloud Console e selecione o projeto do Client ID.
-2. Em APIs e serviços > Biblioteca, ative Google Sheets API.
-3. Em APIs e serviços > Credenciais > este ID OAuth, cadastre em “Origens JavaScript autorizadas” a origem HTTPS exata do GitHub Pages, por exemplo https://SEU-USUARIO.github.io (use a origem real, sem caminho).
-4. Confirme que o tipo do cliente OAuth é “Aplicativo da Web”.
-5. Entre no aplicativo e autorize a conta Google que tem acesso de edição à planilha.
-6. Faça backup dos dados antes de testar a primeira sincronização.
+PUBLICAÇÃO
+1. Faça backup da planilha Google Sheets e exporte um backup JSON pelo app.
+2. Extraia este ZIP.
+3. No repositório GitHub Solar-Casa, substitua index.html e sw.js pelos arquivos deste pacote. O manifest.webmanifest é incluído para manter o pacote completo; pode ser substituído também.
+4. Faça commit na branch main e aguarde o GitHub Pages publicar.
+5. Abra https://capuccino00.github.io/Solar-Casa/ e atualize com Ctrl+F5. O cache do app foi atualizado para v4.
 
-COMO PUBLICAR
-1. Extraia a pasta SFV_App.
-2. Envie o conteúdo de SFV_App para a raiz do repositório GitHub Pages já escolhido para o Solar Casa.
-3. Acesse o endereço HTTPS do site e abra Configurações.
-4. Clique “Conectar Google”, autorize o acesso e depois clique “Sincronizar agora”.
-5. A aplicação cria, se necessário, as abas Leituras, Periodos, Faturas e Configuracoes.
-
-ATENÇÃO À SINCRONIZAÇÃO
-- A sincronização combina registros por data (leituras), data de fechamento (períodos) e mês (faturas). Em duplicidades, o dado local prevalece.
-- A escrita substitui o conteúdo das quatro abas operacionais por seus dados sincronizados; não coloque dados manuais importantes nessas abas.
-- O histórico importado do Excel permanece dentro do aplicativo e não é sobrescrito.
-- Não use a versão como fonte oficial até validar uma leitura de teste e confirmar os valores no Google Sheets.
-- Se ocorrer erro 403, confirme que a conta conectada tem acesso de edição à planilha e que a Google Sheets API está ativada.
-- Se ocorrer erro de origem não autorizada, ajuste “Origens JavaScript autorizadas” no OAuth.
-
-ATUALIZAÇÃO DESTA VERSÃO
-- Histórico: a tabela de leituras agora tem botões Editar e Excluir. A edição solicita os valores em janelas de entrada; a exclusão pede confirmação e recalcula os consumos derivados.
-- Ao excluir uma leitura, sincronize com o Google Sheets para propagar a exclusão também à aba Leituras.
-- A página inicial agora mostra resumo dos períodos antigos importados e resumo anual das faturas do Excel. Os ciclos antigos continuam sem ano/data completa quando a planilha original não permite confirmá-los.
-- O cache do aplicativo foi atualizado para forçar a carga da nova versão.
+NOTAS
+- O histórico do Excel é embutido para consulta e análise; não precisa ser copiado para as abas de dados novos do Google Sheets.
+- Os rótulos dos ciclos foram preservados porque os anos/datas completas não são inequívocos no Excel.
+- Faça backup antes de testar; a sincronização do Google Sheets pode reescrever as abas de dados do aplicativo.
