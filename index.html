@@ -24,17 +24,15 @@ header{padding:24px 0 18px;display:flex;justify-content:space-between;align-item
 
 <section id="dash" class="section active">
 <div class="grid">
- <div class="metric"><div class="label">Energia gerada</div><div class="value" id="mGen">—</div><div class="foot">no dia da última leitura</div></div>
- <div class="metric"><div class="label">Consumo total</div><div class="value" id="mUse">—</div><div class="foot">rede + placas no dia</div></div>
- <div class="metric"><div class="label">Injetado na rede</div><div class="value" id="mInj">—</div><div class="foot">diferença do IT 103</div></div>
-  <div class="metric"><div class="label">Saldo do dia</div><div class="value" id="mBalance">—</div><div class="foot">injetado − consumo da rede</div></div>
- <div class="metric"><div class="label">Consumo direto solar</div><div class="value" id="mSelf">—</div><div class="foot">geração usada na casa</div></div>
+  <div class="metric"><div class="label">Energia gerada no período</div><div class="value" id="mGen">—</div><div class="foot">total acumulado</div></div>
+  <div class="metric"><div class="label">Consumo da rede no período</div><div class="value" id="mGridUse">—</div><div class="foot">soma das leituras diárias</div></div>
+  <div class="metric"><div class="label">Injetado na rede no período</div><div class="value" id="mInj">—</div><div class="foot">total acumulado</div></div>
+  <div class="metric"><div class="label">Saldo no período</div><div class="value" id="mBalance">—</div><div class="foot">injetado − consumo da rede</div></div>
   <div class="metric"><div class="label">Leitura CT 03</div><div class="value" id="mGridReading">—</div><div class="foot">medidor acumulado da rede</div></div>
   <div class="metric"><div class="label">Leitura IT 103</div><div class="value" id="mExportReading">—</div><div class="foot">medidor acumulado de injeção</div></div>
-  <div class="metric"><div class="label">Consumo da rede</div><div class="value" id="mGridUse">—</div><div class="foot">consumo diário medido pelo CT 03</div></div>
-</div>
-<div class="layout">
- <div class="panel"><h2>Fluxo de energia</h2><p class="sub">Resumo do último período registrado</p><div class="bars">
+ </div>
+ <div class="layout">
+ <div class="panel"><h2>Fluxo de energia</h2><p class="sub">Acumulado do ciclo atual</p><div class="bars">
   <div class="barline"><span>Gerado</span><div class="track"><div class="fill" id="bGen"></div></div><b id="vGen">—</b></div>
   <div class="barline"><span>Consumo total</span><div class="track"><div class="fill gold" id="bUse"></div></div><b id="vUse">—</b></div>
   <div class="barline"><span>Injetado</span><div class="track"><div class="fill" id="bInj"></div></div><b id="vInj">—</b></div>
@@ -120,20 +118,24 @@ function table(rows){if(!rows.length)return '<div class="empty">Ainda não há r
 function render(){
  const rows=enrich(), last=rows.at(-1);
  const display=last||{gen:0,totalUse:0,injected:0,self:0,gridUse:0,grid:0,export:0};
- const show=k=>fmt(display[k])+' kWh';
- $('mGen').textContent=show('gen');
- $('mUse').textContent=show('totalUse');
- $('mInj').textContent=show('injected');
- $('mBalance').textContent=fmt(n(display.injected)-n(display.gridUse))+' kWh';
- $('mGridUse').textContent=show('gridUse');
- $('mSelf').textContent=show('self');
- // Indicadores com as leituras acumuladas dos medidores.
- if($('mGridReading')) $('mGridReading').textContent=fmt(display.grid);
- if($('mExportReading')) $('mExportReading').textContent=fmt(display.export);
- const max=Math.max(n(display.gen),n(display.totalUse),n(display.injected),1);
- [['Gen','gen'],['Use','totalUse'],['Inj','injected']].forEach(([id,k])=>{
-  $('b'+id).style.width=(n(display[k])/max*100)+'%';
-  $('v'+id).textContent=show(k);
+ // Os quadros superiores mostram o acumulado do ciclo atual.
+ const lastPeriod=db.periods.slice().sort((a,b)=>String(b.end).localeCompare(String(a.end)))[0];
+ const cycleRows=lastPeriod?rows.filter(r=>String(r.date)>String(lastPeriod.end)):rows;
+ const cycleGen=cycleRows.reduce((sum,r)=>sum+n(r.gen),0);
+ const cycleGrid=cycleRows.reduce((sum,r)=>sum+n(r.gridUse),0);
+ const cycleInj=cycleRows.reduce((sum,r)=>sum+n(r.injected),0);
+ const cycleBalance=cycleInj-cycleGrid;
+ const show=k=>fmt(k)+' kWh';
+ $('mGen').textContent=show(cycleGen);
+ $('mGridUse').textContent=show(cycleGrid);
+ $('mInj').textContent=show(cycleInj);
+ $('mBalance').textContent=show(cycleBalance);
+ $('mGridReading').textContent=fmt(display.grid);
+ $('mExportReading').textContent=fmt(display.export);
+ const max=Math.max(cycleGen,cycleGrid,cycleInj,1);
+ [['Gen',cycleGen],['Use',cycleGrid],['Inj',cycleInj]].forEach(([id,val])=>{
+  $('b'+id).style.width=(val/max*100)+'%';
+  $('v'+id).textContent=show(val);
  });
  const source=last?.previousSource||'sem leitura anterior';
  $('periodCallout').textContent=last
